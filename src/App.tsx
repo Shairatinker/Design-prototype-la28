@@ -1,7 +1,8 @@
 import { useCallback, useLayoutEffect, useState } from 'react'
 import { FleetSidebar } from './components/fleet-sidebar'
-import { KpiCard } from './components/kpi-card'
-import { DonutChart } from './components/donut-chart'
+import { ExecutiveKpisSection } from './components/executive-kpis-section'
+import { HorizontalBarChart } from './components/horizontal-bar-chart'
+import { VehicleStatusPieChart } from './components/vehicle-status-pie-chart'
 import { FleetMap } from './components/fleet-map'
 import { AlertsTable } from './components/alerts-table'
 import { FleetSearchBar } from './components/fleet-search-bar'
@@ -110,19 +111,19 @@ export default function App() {
   }, [])
 
   const vehicleStatusData = [
-    { name: 'Available', value: 47, color: '#059669' },
-    { name: 'In Service', value: 23, color: '#3B82F6' },
-    { name: 'Maintenance', value: 18, color: '#EF4444' },
-    { name: 'Incident', value: 9, color: '#F97316' },
-    { name: 'Out of Service', value: 3, color: '#8B5CF6' },
+    { name: 'Available', value: 47 },
+    { name: 'In Service', value: 23 },
+    { name: 'Maintenance', value: 18 },
+    { name: 'Incident', value: 9 },
+    { name: 'Out of Service', value: 3 },
   ]
 
   const currentUseData = [
-    { name: 'Available', value: 67, color: '#059669' },
-    { name: 'Taxi', value: 23, color: '#3B82F6' },
-    { name: 'Allocated Vehicle', value: 2, color: '#F59E0B' },
-    { name: 'Rate Card', value: 2, color: '#6366F1' },
-    { name: 'Fleet Pool', value: 6, color: '#EC4899' },
+    { name: 'Available', value: 67 },
+    { name: 'Taxi', value: 23 },
+    { name: 'Allocated Vehicle', value: 2 },
+    { name: 'Rate Card', value: 2 },
+    { name: 'Fleet Pool', value: 6 },
   ]
 
   const tabTriggerClass =
@@ -202,23 +203,11 @@ export default function App() {
                 <AssignmentsView />
               ) : (
                 <div className="space-y-8">
-                  <div>
-                    <h2 className="mb-1 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Executive KPIs</h2>
-                    <p className="mb-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-                      Live snapshot across utilization, fleet health, and incidents.
-                    </p>
-                    <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-5">
-                      <KpiCard value="19%" label="Utilization Rate" />
-                      <KpiCard value="44" label="Vehicles Available" />
-                      <KpiCard value="7 / 67" label="Drivers Dispatched / Approved" />
-                      <KpiCard value="10" label="Alerts Incidents" />
-                      <KpiCard value="5" label="Maintenance Backlog" />
-                    </div>
-                  </div>
+                  <ExecutiveKpisSection />
 
                   <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                    <DonutChart title="Vehicle Status" data={vehicleStatusData} />
-                    <DonutChart title="Current Use" data={currentUseData} />
+                    <VehicleStatusPieChart data={vehicleStatusData} />
+                    <HorizontalBarChart title="Current Use" data={currentUseData} />
                   </div>
 
                   <FleetMap />

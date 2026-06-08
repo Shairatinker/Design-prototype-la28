@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
-import { ChevronLeft, MapPin, Pencil, X } from 'lucide-react'
+import { ChevronLeft, MapPin, MoreHorizontal, Pencil, X } from 'lucide-react'
 import { Button } from './ui/button'
 import { Card, CardContent } from './ui/card'
 import { Badge } from './ui/badge'
@@ -14,6 +14,7 @@ import {
 } from './ui/dialog'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 import { ScrollArea } from './ui/scroll-area'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs'
 import { vehicleMaintenanceClass } from '../lib/status-badge-styles'
@@ -39,6 +40,14 @@ function isVehicleDetailSection(value: string): value is VehicleDetailSection {
 
 const underlineTabTriggerClass =
   'rounded-none border-0 border-b-2 border-transparent bg-transparent px-2 py-2.5 text-sm font-medium text-muted-foreground shadow-none data-[state=active]:border-primary data-[state=active]:bg-transparent data-[state=active]:text-foreground data-[state=active]:shadow-none sm:px-3'
+
+const SECONDARY_VEHICLE_ACTIONS = [
+  { id: 'problem', label: 'Problem detection report' },
+  { id: 'inspection', label: 'Operation Inspection' },
+  { id: 'unlock', label: 'Unlock' },
+  { id: 'maintenance', label: 'Schedule Maintenance' },
+  { id: 'incident', label: 'Report Incident' },
+] as const
 
 function parseDepotFromLocation(location: string): string {
   if (location.includes('(')) return location.split('(')[0]?.trim() ?? location
@@ -131,12 +140,14 @@ export function VehicleDetail({
   const [editingDepot, setEditingDepot] = useState(false)
   const [tagsDraft, setTagsDraft] = useState('')
   const [depotDraft, setDepotDraft] = useState('')
+  const [actionsMenuOpen, setActionsMenuOpen] = useState(false)
 
   const drivers = ['Maria Garcia', 'James Chen', 'Ana Rodriguez']
 
   useEffect(() => {
     setActiveTab('Drivers')
     setOpenDialog(null)
+    setActionsMenuOpen(false)
     setSelectedDriver('')
     setDriverSearch('')
     setEditingTags(false)
@@ -224,55 +235,41 @@ export function VehicleDetail({
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         {!isDrawer ? <h1 className="text-2xl font-semibold">Vehicle Detail</h1> : <h2 className="sr-only">Vehicle actions</h2>}
-        <div className={`flex flex-wrap gap-2 ${isDrawer ? 'w-full' : ''}`}>
-          <Button
-            size="sm"
-            type="button"
-            style={{ backgroundColor: '#E0F0FB', color: '#030213' }}
-            onClick={() => setOpenDialog('assignment')}
-          >
+        <div className={`flex items-center gap-2 ${isDrawer ? 'w-full justify-end' : ''}`}>
+          <Button size="sm" type="button" onClick={() => setOpenDialog('assignment')}>
             Create assignment
           </Button>
-          <Button
-            size="sm"
-            type="button"
-            style={{ backgroundColor: '#E0F0FB', color: '#030213' }}
-            onClick={() => setOpenDialog('problem')}
-          >
-            Problem detection report
-          </Button>
-          <Button
-            size="sm"
-            type="button"
-            style={{ backgroundColor: '#E0F0FB', color: '#030213' }}
-            onClick={() => setOpenDialog('inspection')}
-          >
-            Operation Inspection
-          </Button>
-          <Button
-            size="sm"
-            type="button"
-            style={{ backgroundColor: '#E0F0FB', color: '#030213' }}
-            onClick={() => setOpenDialog('unlock')}
-          >
-            Unlock
-          </Button>
-          <Button
-            size="sm"
-            type="button"
-            style={{ backgroundColor: '#E0F0FB', color: '#030213' }}
-            onClick={() => setOpenDialog('maintenance')}
-          >
-            Schedule Maintenance
-          </Button>
-          <Button
-            size="sm"
-            type="button"
-            style={{ backgroundColor: '#E0F0FB', color: '#030213' }}
-            onClick={() => setOpenDialog('incident')}
-          >
-            Report Incident
-          </Button>
+          <Popover open={actionsMenuOpen} onOpenChange={setActionsMenuOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                aria-label="More vehicle actions"
+              >
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-56 p-1" align="end">
+              <ul className="flex flex-col gap-0.5" role="menu" aria-label="Vehicle actions">
+                {SECONDARY_VEHICLE_ACTIONS.map((action) => (
+                  <li key={action.id} role="none">
+                    <button
+                      type="button"
+                      role="menuitem"
+                      className="flex w-full items-center rounded-md px-2 py-1.5 text-left text-sm hover:bg-muted"
+                      onClick={() => {
+                        setOpenDialog(action.id)
+                        setActionsMenuOpen(false)
+                      }}
+                    >
+                      {action.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
 
@@ -340,7 +337,7 @@ export function VehicleDetail({
                 <div className="flex flex-col items-end gap-2">
                   <span>{assignedDriver}</span>
                   {hasNoDriver ? (
-                    <Button type="button" size="sm" onClick={openAssignDriver}>
+                    <Button type="button" variant="secondary" size="sm" onClick={openAssignDriver}>
                       Assign a driver
                     </Button>
                   ) : null}

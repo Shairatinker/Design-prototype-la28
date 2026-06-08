@@ -7,14 +7,16 @@ interface DonutChartProps {
 }
 
 export function DonutChart({ title, data }: DonutChartProps) {
+  const total = data.reduce((sum, entry) => sum + entry.value, 0)
+
   return (
-    <Card className="gap-0 overflow-hidden rounded-2xl border-0 shadow-md ring-1 ring-black/[0.04] dark:ring-white/10">
-      <CardHeader className="border-b border-border/60 bg-muted/40 pb-4">
+    <Card className="gap-0 overflow-hidden border shadow-sm">
+      <CardHeader className="border-b border-border pb-4">
         <CardTitle className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">{title}</CardTitle>
       </CardHeader>
       <CardContent className="pt-6">
         <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-center">
-          <div className="h-40 w-40 shrink-0" style={{ minHeight: '160px' }}>
+          <div className="relative h-40 w-40 shrink-0" style={{ minHeight: '160px' }}>
             <ResponsiveContainer width="100%" height="100%" minHeight={160}>
               <PieChart>
                 <Pie
@@ -34,6 +36,13 @@ export function DonutChart({ title, data }: DonutChartProps) {
                 </Pie>
               </PieChart>
             </ResponsiveContainer>
+            <div
+              className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center"
+              aria-hidden
+            >
+              <span className="text-2xl font-bold tabular-nums leading-none text-foreground">{total}</span>
+              <span className="mt-1 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">Total</span>
+            </div>
           </div>
           <div className="min-w-0 flex-1 space-y-2.5">
             {data.map((entry, index) => (
