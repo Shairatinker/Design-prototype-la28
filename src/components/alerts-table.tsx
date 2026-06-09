@@ -12,7 +12,6 @@ import {
   effectiveAlertToggleableColumns,
   loadAlertTableViewsState,
   saveAlertTableViewsState,
-  type AlertTableToggleableColumnId,
   type AlertTableViewsState,
 } from '../lib/alert-table-views'
 
