@@ -14,9 +14,9 @@ export function ExecutiveKpisSection() {
             Executive KPIs
           </h2>
           <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground">
-            Live snapshot across utilization, fleet health, and incidents.{' '}
-            <span className="text-foreground/80">{kpiTimeRangeDescription(timeRange)}</span>
+            Live snapshot across utilization, fleet health, and incidents.
           </p>
+          <p className="inline-block rounded-md bg-sky-50 px-2 py-0.5 text-sm font-semibold text-sky-700">{kpiTimeRangeDescription(timeRange)}</p>
         </div>
         <KpiTimeRangeSelector value={timeRange} onChange={setTimeRange} className="shrink-0 self-start" />
       </div>

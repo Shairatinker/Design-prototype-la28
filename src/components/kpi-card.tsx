@@ -110,14 +110,6 @@ export function KpiCard({
                 )}
                 {formatTrendChange(trend)}
               </span>
-              <span
-                className={cn(
-                  'text-muted-foreground/70',
-                  compact ? 'text-[10px]' : 'text-xs',
-                )}
-              >
-                {trendPeriodLabel(trend.period)}
-              </span>
             </div>
           ) : sublabel ? (
             <div
