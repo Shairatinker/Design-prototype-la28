@@ -20,7 +20,7 @@ export function ExecutiveKpisSection() {
         </div>
         <KpiTimeRangeSelector value={timeRange} onChange={setTimeRange} className="shrink-0 self-start" />
       </div>
-      <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-3 lg:grid-cols-5">
+      <div className="grid grid-cols-1 items-stretch gap-4 md:grid-cols-4 lg:grid-cols-7">
         {EXECUTIVE_KPIS.map((kpi) => (
           <KpiCard
             key={kpi.id}

@@ -66,29 +66,41 @@ export function KpiCard({
         />
         <div
           className={cn(
-            'grid min-h-0 flex-1',
+            'flex min-h-0 flex-1 flex-col',
             compact
-              ? 'grid-rows-[minmax(2rem,auto)_2rem_minmax(0.875rem,auto)] gap-0.5 px-3 py-2.5 sm:px-3.5 sm:py-3'
-              : 'grid-rows-[minmax(3.5rem,auto)_2.75rem_minmax(1.25rem,auto)] gap-2 p-5 sm:p-6',
+              ? 'gap-0.5 px-3 py-2.5 sm:px-3.5 sm:py-3'
+              : 'gap-1.5 p-5 sm:p-6',
           )}
         >
-          <div className="flex items-start justify-between gap-2">
-            <div
-              className={cn(
-                'min-w-0 font-medium text-muted-foreground',
-                compact ? 'text-[10px] leading-tight sm:text-[11px]' : 'text-sm leading-snug',
-              )}
-            >
-              {label}
-            </div>
-            {trend ? (
+          <div
+            className={cn(
+              'font-bold tabular-nums leading-none tracking-tight text-foreground',
+              compact ? 'text-base sm:text-lg' : 'text-2xl sm:text-3xl',
+            )}
+          >
+            {value}
+          </div>
+          <div
+            className={cn(
+              'font-medium text-muted-foreground',
+              compact ? 'text-[10px] leading-tight sm:text-[11px]' : 'text-sm leading-snug',
+            )}
+          >
+            {label}
+          </div>
+          {trend ? (
+            <div className="mt-auto flex items-center justify-between gap-2 pt-2">
               <span
                 className={cn(
                   'inline-flex shrink-0 items-center gap-0.5 rounded-full border px-1.5 py-0.5 tabular-nums',
                   compact ? 'text-[10px]' : 'text-xs',
-                trend.direction === 'up'
-                  ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
-                  : 'border-red-200 bg-red-50 text-red-800',
+                  trend.invertColors
+                    ? trend.direction === 'up'
+                      ? 'border-red-200 bg-red-50 text-red-800'
+                      : 'border-emerald-200 bg-emerald-50 text-emerald-800'
+                    : trend.direction === 'up'
+                      ? 'border-emerald-200 bg-emerald-50 text-emerald-800'
+                      : 'border-red-200 bg-red-50 text-red-800',
                 )}
               >
                 {trend.direction === 'up' ? (
@@ -98,39 +110,25 @@ export function KpiCard({
                 )}
                 {formatTrendChange(trend)}
               </span>
-            ) : (
-              <span className="shrink-0" aria-hidden />
-            )}
-          </div>
-          <div
-            className={cn(
-              'flex items-end font-bold tabular-nums leading-none tracking-tight text-foreground',
-              compact ? 'text-lg sm:text-xl' : 'text-3xl sm:text-4xl',
-            )}
-          >
-            {value}
-          </div>
-          {trend ? (
-            <div
-              className={cn(
-                'self-end text-muted-foreground/80',
-                compact ? 'text-[10px] leading-tight' : 'text-xs',
-              )}
-            >
-              {trend.direction === 'up' ? 'Trending up' : 'Trending down'} {trendPeriodLabel(trend.period)}
+              <span
+                className={cn(
+                  'text-muted-foreground/70',
+                  compact ? 'text-[10px]' : 'text-xs',
+                )}
+              >
+                {trendPeriodLabel(trend.period)}
+              </span>
             </div>
           ) : sublabel ? (
             <div
               className={cn(
-                'self-end text-muted-foreground/80',
+                'mt-auto text-muted-foreground/80',
                 compact ? 'text-[10px] leading-tight' : 'text-xs',
               )}
             >
               {sublabel}
             </div>
-          ) : (
-            <span aria-hidden />
-          )}
+          ) : null}
         </div>
       </div>
     </Card>
